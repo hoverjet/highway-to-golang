@@ -1,7 +1,9 @@
 package main
 
 import (
-	"fmt"
+	"github.com/google/uuid"
+	"log/slog"
+	"os"
 	"time"
 )
 
@@ -12,11 +14,11 @@ type Task struct {
 	UpdatedAt time.Time
 }
 
-func NewTask(uid string, text string) *Task {
+func NewTask(text string) *Task {
 	now := time.Now()
 
 	return &Task{
-		UID:       uid,
+		UID:       uuid.NewString(),
 		Text:      text,
 		CreatedAt: now,
 		UpdatedAt: now,
@@ -52,30 +54,31 @@ func (s *TaskStore) DeleteTask(uid string) {
 }
 
 func main() {
+	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
 	store := NewTaskStore()
 
 	// создаём задачи
-	t1 := NewTask("1", "learn go")
-	t2 := NewTask("2", "write code")
+	t1 := NewTask("learn go")
+	t2 := NewTask("write code")
 
 	// добавляем в store
 	store.AddTask(t1)
 	store.AddTask(t2)
 
 	// получаем задачу
-	if t, ok := store.GetTask("1"); ok {
-		fmt.Println("before:", t.Text)
+	if t, ok := store.GetTask(t1.UID); ok {
+		logger.Info("before update", "uid", t.UID, "text", t.Text)
 
 		t.SetText("learn go pointers")
 
-		fmt.Println("after:", t.Text)
+		logger.Info("after update", "uid", t.UID, "text", t.Text)
 	}
 
 	// удаляем задачу
-	store.DeleteTask("2")
+	store.DeleteTask(t2.UID)
 
 	// проверяем удаление
-	if _, ok := store.GetTask("2"); !ok {
-		fmt.Println("task 2 deleted")
+	if _, ok := store.GetTask(t2.UID); !ok {
+		logger.Info("task deleted", "uid", t2.UID)
 	}
 }
