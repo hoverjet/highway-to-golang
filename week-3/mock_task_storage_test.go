@@ -40,9 +40,11 @@ func (m *MockTaskStorage) EXPECT() *MockTaskStorageMockRecorder {
 }
 
 // AddTask mocks base method.
-func (m *MockTaskStorage) AddTask(task *Task) {
+func (m *MockTaskStorage) AddTask(task *Task) error {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "AddTask", task)
+	ret := m.ctrl.Call(m, "AddTask", task)
+	ret0, _ := ret[0].(error)
+	return ret0
 }
 
 // AddTask indicates an expected call of AddTask.
@@ -52,9 +54,11 @@ func (mr *MockTaskStorageMockRecorder) AddTask(task any) *gomock.Call {
 }
 
 // DeleteTask mocks base method.
-func (m *MockTaskStorage) DeleteTask(uid string) {
+func (m *MockTaskStorage) DeleteTask(uid string) error {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "DeleteTask", uid)
+	ret := m.ctrl.Call(m, "DeleteTask", uid)
+	ret0, _ := ret[0].(error)
+	return ret0
 }
 
 // DeleteTask indicates an expected call of DeleteTask.
@@ -64,11 +68,11 @@ func (mr *MockTaskStorageMockRecorder) DeleteTask(uid any) *gomock.Call {
 }
 
 // GetTask mocks base method.
-func (m *MockTaskStorage) GetTask(uid string) (*Task, bool) {
+func (m *MockTaskStorage) GetTask(uid string) (*Task, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetTask", uid)
 	ret0, _ := ret[0].(*Task)
-	ret1, _ := ret[1].(bool)
+	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
