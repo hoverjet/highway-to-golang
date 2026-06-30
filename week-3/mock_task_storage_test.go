@@ -40,9 +40,11 @@ func (m *MockTaskStorage) EXPECT() *MockTaskStorageMockRecorder {
 }
 
 // AddTask mocks base method.
-func (m *MockTaskStorage) AddTask(task *Task) {
+func (m *MockTaskStorage) AddTask(task *Task) error {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "AddTask", task)
+	ret := m.ctrl.Call(m, "AddTask", task)
+	ret0, _ := ret[0].(error)
+	return ret0
 }
 
 // AddTask indicates an expected call of AddTask.
@@ -51,10 +53,36 @@ func (mr *MockTaskStorageMockRecorder) AddTask(task any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddTask", reflect.TypeOf((*MockTaskStorage)(nil).AddTask), task)
 }
 
-// DeleteTask mocks base method.
-func (m *MockTaskStorage) DeleteTask(uid string) {
+// CreateAsync mocks base method.
+func (m *MockTaskStorage) CreateAsync(task *Task) {
 	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "DeleteTask", uid)
+	m.ctrl.Call(m, "CreateAsync", task)
+}
+
+// CreateAsync indicates an expected call of CreateAsync.
+func (mr *MockTaskStorageMockRecorder) CreateAsync(task any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAsync", reflect.TypeOf((*MockTaskStorage)(nil).CreateAsync), task)
+}
+
+// DeleteAsync mocks base method.
+func (m *MockTaskStorage) DeleteAsync(uid string) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "DeleteAsync", uid)
+}
+
+// DeleteAsync indicates an expected call of DeleteAsync.
+func (mr *MockTaskStorageMockRecorder) DeleteAsync(uid any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteAsync", reflect.TypeOf((*MockTaskStorage)(nil).DeleteAsync), uid)
+}
+
+// DeleteTask mocks base method.
+func (m *MockTaskStorage) DeleteTask(uid string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteTask", uid)
+	ret0, _ := ret[0].(error)
+	return ret0
 }
 
 // DeleteTask indicates an expected call of DeleteTask.
@@ -64,11 +92,11 @@ func (mr *MockTaskStorageMockRecorder) DeleteTask(uid any) *gomock.Call {
 }
 
 // GetTask mocks base method.
-func (m *MockTaskStorage) GetTask(uid string) (*Task, bool) {
+func (m *MockTaskStorage) GetTask(uid string) (*Task, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetTask", uid)
 	ret0, _ := ret[0].(*Task)
-	ret1, _ := ret[1].(bool)
+	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
@@ -76,4 +104,18 @@ func (m *MockTaskStorage) GetTask(uid string) (*Task, bool) {
 func (mr *MockTaskStorageMockRecorder) GetTask(uid any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTask", reflect.TypeOf((*MockTaskStorage)(nil).GetTask), uid)
+}
+
+// PendingAsyncOperations mocks base method.
+func (m *MockTaskStorage) PendingAsyncOperations() int {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "PendingAsyncOperations")
+	ret0, _ := ret[0].(int)
+	return ret0
+}
+
+// PendingAsyncOperations indicates an expected call of PendingAsyncOperations.
+func (mr *MockTaskStorageMockRecorder) PendingAsyncOperations() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PendingAsyncOperations", reflect.TypeOf((*MockTaskStorage)(nil).PendingAsyncOperations))
 }
