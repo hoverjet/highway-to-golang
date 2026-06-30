@@ -42,33 +42,21 @@ func isStorageErrorCode(err error, code StorageErrorCode) bool {
 type asyncOperation func()
 
 type asyncExecutor struct {
-	operations chan asyncOperation
-	pending    atomic.Int64
+	pending atomic.Int64
 }
 
 func newAsyncExecutor() *asyncExecutor {
-	executor := &asyncExecutor{
-		operations: make(chan asyncOperation),
-	}
-
-	go executor.run()
-
-	return executor
+	return &asyncExecutor{}
 }
 
 func (e *asyncExecutor) enqueue(operation asyncOperation) {
 	e.pending.Add(1)
 
 	go func() {
-		e.operations <- operation
-	}()
-}
+		defer e.pending.Add(-1)
 
-func (e *asyncExecutor) run() {
-	for operation := range e.operations {
 		operation()
-		e.pending.Add(-1)
-	}
+	}()
 }
 
 func (e *asyncExecutor) PendingOperations() int {
@@ -108,7 +96,7 @@ type TaskStorage interface {
 }
 
 type TaskStore struct {
-	mu    sync.RWMutex
+	mu    sync.Mutex
 	tasks map[string]*Task
 	async *asyncExecutor
 }
@@ -133,8 +121,8 @@ func (s *TaskStore) AddTask(task *Task) error {
 }
 
 func (s *TaskStore) GetTask(uid string) (*Task, error) {
-	s.mu.RLock()
-	defer s.mu.RUnlock()
+	s.mu.Lock()
+	defer s.mu.Unlock()
 
 	task, ok := s.tasks[uid]
 	if !ok {
@@ -173,7 +161,7 @@ func (s *TaskStore) PendingAsyncOperations() int {
 }
 
 type SliceTaskStore struct {
-	mu    sync.RWMutex
+	mu    sync.Mutex
 	tasks []*Task
 	async *asyncExecutor
 }
@@ -199,8 +187,8 @@ func (s *SliceTaskStore) AddTask(task *Task) error {
 }
 
 func (s *SliceTaskStore) GetTask(uid string) (*Task, error) {
-	s.mu.RLock()
-	defer s.mu.RUnlock()
+	s.mu.Lock()
+	defer s.mu.Unlock()
 
 	for _, task := range s.tasks {
 		if task.UID == uid {
