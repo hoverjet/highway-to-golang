@@ -53,6 +53,30 @@ func (mr *MockTaskStorageMockRecorder) AddTask(task any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddTask", reflect.TypeOf((*MockTaskStorage)(nil).AddTask), task)
 }
 
+// CreateAsync mocks base method.
+func (m *MockTaskStorage) CreateAsync(task *Task) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "CreateAsync", task)
+}
+
+// CreateAsync indicates an expected call of CreateAsync.
+func (mr *MockTaskStorageMockRecorder) CreateAsync(task any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAsync", reflect.TypeOf((*MockTaskStorage)(nil).CreateAsync), task)
+}
+
+// DeleteAsync mocks base method.
+func (m *MockTaskStorage) DeleteAsync(uid string) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "DeleteAsync", uid)
+}
+
+// DeleteAsync indicates an expected call of DeleteAsync.
+func (mr *MockTaskStorageMockRecorder) DeleteAsync(uid any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteAsync", reflect.TypeOf((*MockTaskStorage)(nil).DeleteAsync), uid)
+}
+
 // DeleteTask mocks base method.
 func (m *MockTaskStorage) DeleteTask(uid string) error {
 	m.ctrl.T.Helper()
@@ -80,4 +104,18 @@ func (m *MockTaskStorage) GetTask(uid string) (*Task, error) {
 func (mr *MockTaskStorageMockRecorder) GetTask(uid any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTask", reflect.TypeOf((*MockTaskStorage)(nil).GetTask), uid)
+}
+
+// PendingAsyncOperations mocks base method.
+func (m *MockTaskStorage) PendingAsyncOperations() int {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "PendingAsyncOperations")
+	ret0, _ := ret[0].(int)
+	return ret0
+}
+
+// PendingAsyncOperations indicates an expected call of PendingAsyncOperations.
+func (mr *MockTaskStorageMockRecorder) PendingAsyncOperations() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PendingAsyncOperations", reflect.TypeOf((*MockTaskStorage)(nil).PendingAsyncOperations))
 }
