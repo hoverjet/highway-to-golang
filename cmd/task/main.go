@@ -1,17 +1,24 @@
 package main
 
 import (
+	"context"
+	"errors"
 	"log/slog"
 	"os"
+	"os/signal"
+	"syscall"
 
 	"highway-to-golang/internal/app"
 )
 
 func main() {
-	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
 
-	if err := app.Run(logger); err != nil {
-		logger.Error("application failed", "error", err)
+	slog.SetDefault(slog.New(slog.NewTextHandler(os.Stdout, nil)))
+
+	if err := app.Run(ctx); err != nil && !errors.Is(err, context.Canceled) {
+		slog.Error("application failed", "error", err)
 		os.Exit(1)
 	}
 }
